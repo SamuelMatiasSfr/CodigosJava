@@ -6,36 +6,57 @@ import java.io.FileNotFoundException;
 
 public class GerenciadorContas{
     
-    ArrayList<Conta> contas;
-    ArrayList<ContaEspecial> contasEspeciais;
-    ArrayList<ContaPoupanca> contasPoupanca;
+    private ArrayList<Conta> contas;
+    private ArrayList<ContaEspecial> contasEspeciais;
+    private ArrayList<ContaPoupanca> contasPoupanca;
 
-    public void carregaDados() throws FileNotFoundException, IOException{
-        FileReader arquivo = new FileReader("contas.csv");
-        BufferedReader buffer = new BufferedReader(arquivo);
-        String linha = buffer.readLine();
+    public void carregaDados(){
+        this.contas = new ArrayList<>();
+        this.contasEspeciais = new ArrayList<>();
+        this.contasPoupanca = new ArrayList<>();
 
-        int cont = 0;
-        while(linha != null){
-            String result[] = linha.split(",");
-            
-            if(cont > 0){
-                if(result.length == 3){
-                    Conta conta = new Conta(0, " ", 0);
-                    conta.setId(result[i]);
+        try(BufferedReader buffer = new BufferedReader(new FileReader("contas.csv"))){
+            String linha;
+            int cont = 0;
+            while((linha = buffer.readLine()) != null){
+                String result[] = linha.split(",");
+                
+                if(cont > 0){
+                    if(result.length == 3){
+                        int id = Integer.parseInt(result[0]);
+                        float saldo = Float.parseFloat(result[2]);
+                        Conta conta = new Conta(id, result[1], saldo);
+                        contas.add(conta);
+                    } else if(result.length == 4){
+                        int id = Integer.parseInt(result[0]);
+                        float saldo = Float.parseFloat(result[2]);
+                        float limite = Float.parseFloat(result[3]);
+                        float rendimento = Float.parseFloat(result[3]);
+                        
+                         ContaEspecial contaEspecial = new ContaEspecial(id, result[1], saldo, limite);
+                        contasEspeciais.add(contaEspecial);
+
+                        ContaPoupanca contaPoupanca = new ContaPoupanca(id, result[1], saldo, rendimento); 
+                        contasPoupanca.add(contaPoupanca);
+                    }
                 }
+                cont++;
             }
-            linha = buffer.readLine();
-            cont++;
+            buffer.close();  
+        } catch (FileNotFoundException e) {
+            System.out.println("Arquivo não existe.");
+        } catch (IOException e) {
+            System.out.println("Erro na leitura do arquivo");
         }
-        buffer.close();
-        
+
+
+       
     }
 
     public void mostraQuantContas(){
         System.out.println(contas.size() + " Conta");
-        System.out.println(contas.size() + " ContaEspecial");
-        System.out.println(contas.size() + " ContaPoupanca");
+        System.out.println(contasEspeciais.size() + " ContaEspecial");
+        System.out.println(contasPoupanca.size() + " ContaPoupanca");
     }
 
     public void mostraContasEspeciais(){
@@ -52,4 +73,15 @@ public class GerenciadorContas{
         }
     }
 
+    public ArrayList<Conta> getContas() {
+        return contas;
+    }
+
+    public ArrayList<ContaEspecial> getContasEspeciais() {
+        return contasEspeciais;
+    }
+
+    public ArrayList<ContaPoupanca> getContasPoupanca() {
+        return contasPoupanca;
+    }
 }

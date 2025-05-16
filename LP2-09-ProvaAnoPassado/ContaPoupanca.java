@@ -20,4 +20,12 @@ public class ContaPoupanca extends Conta {
         return super.toString() + ", " + calculaRendimento();
     }
 
+    public float getRendimento() {
+        return rendimento;
+    }
+
+    public void setRendimento(float rendimento) {
+        this.rendimento = rendimento;
+    }
+
 }

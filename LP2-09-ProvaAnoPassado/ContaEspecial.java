@@ -25,6 +25,14 @@ public class ContaEspecial extends Conta {
     @Override
     public String toString() {
         return super.toString() + ", " + limite;
+    }
+
+    public float getLimite() {
+        return limite;
+    }
+
+    public void setLimite(float limite) {
+        this.limite = limite;
     }  
 
 }
