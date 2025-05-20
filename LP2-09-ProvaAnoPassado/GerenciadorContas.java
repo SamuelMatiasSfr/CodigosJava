@@ -22,21 +22,19 @@ public class GerenciadorContas{
                 String result[] = linha.split(",");
                 
                 if(cont > 0){
+                    int id = Integer.parseInt(result[0]);
+                    float saldo = Float.parseFloat(result[2]);
+                    String nome = result[1];
                     if(result.length == 3){
-                        int id = Integer.parseInt(result[0]);
-                        float saldo = Float.parseFloat(result[2]);
-                        Conta conta = new Conta(id, result[1], saldo);
+                        Conta conta = new Conta(id, nome, saldo);
                         contas.add(conta);
                     } else if(result.length == 4){
-                        int id = Integer.parseInt(result[0]);
-                        float saldo = Float.parseFloat(result[2]);
                         float limite = Float.parseFloat(result[3]);
-                        float rendimento = Float.parseFloat(result[3]);
-                        
-                         ContaEspecial contaEspecial = new ContaEspecial(id, result[1], saldo, limite);
+                        ContaEspecial contaEspecial = new ContaEspecial(id, nome, saldo, limite);
                         contasEspeciais.add(contaEspecial);
-
-                        ContaPoupanca contaPoupanca = new ContaPoupanca(id, result[1], saldo, rendimento); 
+                    } else if(result.length == 5){
+                        float rendimento = Float.parseFloat(result[4]);
+                        ContaPoupanca contaPoupanca = new ContaPoupanca(id, nome, saldo, rendimento); 
                         contasPoupanca.add(contaPoupanca);
                     }
                 }
@@ -62,7 +60,9 @@ public class GerenciadorContas{
     public void mostraContasEspeciais(){
         System.out.println("id, nome, saldo, limite");
         for(ContaEspecial conta : contasEspeciais){
-            System.out.println(conta);
+            if(conta.getSaldo() < conta.getLimite()){
+                System.out.println(conta);
+            }
         }
     }
 
