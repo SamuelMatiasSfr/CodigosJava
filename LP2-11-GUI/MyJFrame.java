@@ -1,44 +1,58 @@
-import javax.swing.JOptionPane;
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Container;
+import java.awt.GridLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import java.awt.FlowLayout;
 
-public class MyJFrame extends JFrame{
-        
-    private JLabel label;
-    private JButton button;
-    private JTextField text;
 
-    public MyJFrame(String titulo){
-        super(titulo);
+public class MyJFrame extends JFrame implements ActionListener{
+
+	private JLabel label_celsius;
+    private JLabel label_fahrenheit;
+	private JTextField jtext;
+	private JButton jbutton;
+
+	public MyJFrame(String titulo) {
+		super(titulo);
         setLayout(new FlowLayout());
 
-        label = new JLabel("Celsius");
-        button = new JButton("Convert");
-        text = new JTextField("Digite os graus");
+        Container painel = this.getContentPane();
+        GridLayout grid = new GridLayout(3, 2, 10, 20);
 
-        add(label);
-        add(text);
-        add(button);
+		label_celsius = new JLabel("Celsius");
+        label_fahrenheit = new JLabel("Fahrenheit");
+		jtext = new JTextField("Digite o grau");
+		jbutton = new JButton("Convert");
 
-        TextHandler handler = new TextHandler();
-        text.addActionListener(handler);
-        button.addActionListener(handler);
-    }
+        painel.add(jtext);
+		painel.add(label_celsius);
+        painel.add(jbutton);
+        painel.add(label_fahrenheit);
 
-    private class TextHandler implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if(e.getSource() == text){
-                JOptionPane.showMessageDialog(MyJFrame.this, "Caixa de texto: " + e.getActionCommand());
-            }else{
-                JOptionPane.showMessageDialog(MyJFrame.this, "Botão: " + e.getActionCommand());
-            }
-        }
-    }    
+		jtext.addActionListener(this);
+		jbutton.addActionListener(this);
+
+        painel.setLayout(grid);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		if (event.getSource()==jbutton) {
+            int fahrenheit = Integer.parseInt(jtext.getText());
+            fahrenheit = ((fahrenheit*9/5) + 32);
+            label_fahrenheit.setText(fahrenheit + " Fahrenheit");
+		}		
+	}
+
+	public static void main(String[] args) {
+		MyJFrame my = new MyJFrame("Celsius Convert");
+		my.setSize(250,150);
+		my.setVisible(true);
+	}
+
 
 }
